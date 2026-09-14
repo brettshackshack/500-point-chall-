@@ -1,6 +1,3 @@
-ct reached!");
-    }
-}
 
 <!DOCTYPE html>
 <html lang="en">
