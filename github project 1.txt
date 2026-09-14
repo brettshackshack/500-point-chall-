@@ -1,0 +1,286 @@
+const DAILY_LIMIT = 500;
+let progress = 0;
+
+function earn(amount) {
+    progress = Math.min(progress + amount, DAILY_LIMIT);
+
+    console.log(`Progress: ${progress}/${DAILY_LIMIT}`);
+
+    if (progress === DAILY_LIMIT) {
+        console.log("Daily limit reached!");
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>500 Point Challenge</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #5865f2, #8b5cf6);
+      color: white;
+    }
+
+    .game {
+      width: 420px;
+      max-width: 92%;
+      background: #181a2b;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 32px;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+    }
+
+    .stat {
+      background: #252842;
+      padding: 15px;
+      border-radius: 12px;
+      width: 45%;
+    }
+
+    .number {
+      display: block;
+      font-size: 28px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .bar {
+      width: 100%;
+      height: 25px;
+      background: #30334d;
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #22c55e, #84cc16);
+      transition: width 0.3s ease;
+    }
+
+    #question {
+      font-size: 20px;
+      margin: 25px 0 15px;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 13px 18px;
+      margin: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      background: #5865f2;
+      color: white;
+      transition: transform 0.1s, background 0.2s;
+    }
+
+    button:hover {
+      background: #4752c4;
+      transform: scale(1.03);
+    }
+
+    .answer {
+      width: 80%;
+    }
+
+    #message {
+      min-height: 25px;
+      margin: 15px 0;
+      font-weight: bold;
+    }
+
+    .reset {
+      background: #ef4444;
+      margin-top: 15px;
+    }
+
+    .reset:hover {
+      background: #dc2626;
+    }
+
+    .complete {
+      color: #86efac;
+      font-size: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="game">
+    <h1>🏆 500 Point Challenge</h1>
+
+    <div class="stats">
+      <div class="stat">
+        Points
+        <span class="number" id="points">0</span>
+      </div>
+
+      <div class="stat">
+        Goal
+        <span class="number">500</span>
+      </div>
+    </div>
+
+    <div class="bar">
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <div id="question"></div>
+
+    <div id="answers"></div>
+
+    <div id="message"></div>
+
+    <button class="reset" onclick="resetGame()">Reset Game</button>
+  </div>
+
+  <script>
+    const DAILY_LIMIT = 500;
+
+    let points = 0;
+    let currentQuestion;
+
+    const questions = [
+      {
+        question: "What is 5 + 5?",
+        answers: ["8", "10", "15", "20"],
+        correct: "10"
+      },
+      {
+        question: "What color do you get by mixing blue and yellow?",
+        answers: ["Purple", "Orange", "Green", "Red"],
+        correct: "Green"
+      },
+      {
+        question: "How many days are in a week?",
+        answers: ["5", "6", "7", "8"],
+        correct: "7"
+      },
+      {
+        question: "What planet do we live on?",
+        answers: ["Mars", "Venus", "Earth", "Jupiter"],
+        correct: "Earth"
+      },
+      {
+        question: "What is 12 × 2?",
+        answers: ["20", "22", "24", "26"],
+        correct: "24"
+      }
+    ];
+
+    function newQuestion() {
+      if (points >= DAILY_LIMIT) {
+        document.getElementById("question").innerHTML =
+          '<span class="complete">🎉 You reached 500 points!</span>';
+
+        document.getElementById("answers").innerHTML = "";
+        return;
+      }
+
+      currentQuestion =
+        questions[Math.floor(Math.random() * questions.length)];
+
+      document.getElementById("question").textContent =
+        currentQuestion.question;
+
+      const answersDiv = document.getElementById("answers");
+      answersDiv.innerHTML = "";
+
+      currentQuestion.answers.forEach(answer => {
+        const button = document.createElement("button");
+
+        button.textContent = answer;
+        button.className = "answer";
+
+        button.onclick = () => checkAnswer(answer);
+
+        answersDiv.appendChild(button);
+      });
+    }
+
+    function earn(amount) {
+      const remaining = DAILY_LIMIT - points;
+
+      if (remaining <= 0) {
+        return;
+      }
+
+      const earned = Math.min(amount, remaining);
+
+      points += earned;
+
+      updateDisplay();
+    }
+
+    function checkAnswer(answer) {
+      const message = document.getElementById("message");
+
+      if (answer === currentQuestion.correct) {
+        earn(50);
+        message.textContent = "✅ Correct! +50 points";
+        message.style.color = "#86efac";
+      } else {
+        message.textContent = "❌ Incorrect! Try the next question.";
+        message.style.color = "#fca5a5";
+      }
+
+      setTimeout(() => {
+        message.textContent = "";
+        newQuestion();
+      }, 700);
+    }
+
+    function updateDisplay() {
+      document.getElementById("points").textContent = points;
+
+      const percentage = (points / DAILY_LIMIT) * 100;
+
+      document.getElementById("progress").style.width =
+        percentage + "%";
+    }
+
+    function resetGame() {
+      points = 0;
+      updateDisplay();
+      document.getElementById("message").textContent = "";
+      newQuestion();
+    }
+
+    // Start the game
+    updateDisplay();
+    newQuestion();
+  </script>
+
+</body>
+</html>
+
