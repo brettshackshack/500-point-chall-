@@ -1,13 +1,4 @@
-const DAILY_LIMIT = 500;
-let progress = 0;
-
-function earn(amount) {
-    progress = Math.min(progress + amount, DAILY_LIMIT);
-
-    console.log(`Progress: ${progress}/${DAILY_LIMIT}`);
-
-    if (progress === DAILY_LIMIT) {
-        console.log("Daily limit reached!");
+ct reached!");
     }
 }
 
@@ -280,7 +271,5 @@ function earn(amount) {
     updateDisplay();
     newQuestion();
   </script>
-
 </body>
-</html>
-
+</html
